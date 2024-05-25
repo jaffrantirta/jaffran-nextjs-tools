@@ -20,16 +20,15 @@ const createTable = (pageName) => {
     process.exit(1);
   }
 
-  const pageContent = `import Loader from "@/app/_components/loader";
-  import Pagination_ from "@/app/_components/pagination";
+  const pageContent = `
+  import React, { useContext, useEffect, useState } from "react";
   import { ${
     pageName.charAt(0).toUpperCase() + pageName.slice(1)
   }Context } from "@/context/${pageName}Context";
   import moment from "moment";
   import Link from "next/link";
-  import React, { useContext, useEffect, useState } from "react";
   import DeleteModal from "./delete";
-  import { Card, CardHeader, CardBody, CardFooter, Divider, Input } from "@nextui-org/react";
+  import { Card, CardHeader, CardBody, CardFooter, Divider, Input, Spinner, Pagination } from "@nextui-org/react";
   import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell} from "@nextui-org/table";
   
   export default function Table() {
@@ -106,7 +105,7 @@ const createTable = (pageName) => {
                     >
                       Edit
                     </Link>
-                    <DeleteModal id={item.id} name={item.user.name} />
+                    <DeleteModal id={item.id}/>
                   </TableCell>
                 </TableRow>
               ))}
@@ -114,15 +113,15 @@ const createTable = (pageName) => {
           </Table>
           </CardBody>
           <CardFooter>
-            {${pageName}.loading && <Loader />}
+            {${pageName}.loading && <Spinner />}
             {${pageName}?.data?.total === 0 && <Callout_ title="Tidak ada data" />}
             <Divider />
             {${pageName}.data && ${pageName}.data.total > 0 && (
               <div className="mt-5 flex items-center justify-center">
-                <Pagination_
+                <Pagination
                   page={page}
                   total={${pageName}?.data?.last_page}
-                  setPage={setPage}
+                  onChange={setPage}
                 />
               </div>
             )}

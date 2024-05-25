@@ -5,7 +5,7 @@ const path = require("path");
 
 // Function to create a new Next.js page
 const createPage = (pageName) => {
-  const pagesDir = path.join(process.cwd(), `src/app/${pageName}`);
+  const pagesDir = path.join(process.cwd(), `src/app/${pageName}/[id]`);
   const pagePath = path.join(pagesDir, `page.tsx`);
 
   if (!fs.existsSync(pagesDir)) {
@@ -20,29 +20,28 @@ const createPage = (pageName) => {
     process.exit(1);
   }
 
-  const pageContent = `"use client";
-  import { ${
+  const pageContent = `
+  "use client";
+import React from "react";
+import Info from "./info";
+import { ${
     pageName.charAt(0).toUpperCase() + pageName.slice(1)
   }Provider } from "@/context/${pageName}Context";
-  import React from "react";
-  import Table${
-    pageName.charAt(0).toUpperCase() + pageName.slice(1)
-  } from "./table";
-  import { CreateModal } from "./create";
 
-export default function ${
-    pageName.charAt(0).toUpperCase() + pageName.slice(1)
-  }() {
+export default function ShowAdmin({ params }: { params: { id: number } }) {
   return (
     <${pageName.charAt(0).toUpperCase() + pageName.slice(1)}Provider>
-    <div className="flex flex-col gap-3 p-10">
-      <h1>${pageName.charAt(0).toUpperCase() + pageName.slice(1)}</h1>
-      <CreateModal />
-      <Table${pageName.charAt(0).toUpperCase() + pageName.slice(1)} />
-    </div>
-  </${pageName.charAt(0).toUpperCase() + pageName.slice(1)}Provider>
+      <div className="flex flex-col gap-3 p-10">
+        <h1>Detail ${pageName.charAt(0).toUpperCase() + pageName.slice(1)}</h1>
+        <Info ${
+          pageName.charAt(0).toUpperCase() + pageName.slice(1)
+        }Id={params.id} />
+      </div>
+    </${pageName.charAt(0).toUpperCase() + pageName.slice(1)}Provider>
   );
-}`;
+}
+
+  `;
 
   fs.writeFileSync(pagePath, pageContent);
   console.log(`Page ${pageName}.tsx created successfully!`);

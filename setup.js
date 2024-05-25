@@ -18,6 +18,7 @@ const dependencies = [
   "@fortawesome/react-fontawesome@latest",
   "moment@^2.30.1",
   "react-hot-toast@^2.4.1",
+  "@remixicon/react@^3.0.0",
 ];
 
 // Install dependencies
