@@ -5,8 +5,8 @@ const path = require("path");
 
 // Function to create a new Next.js page
 const createPage = (pageName) => {
-  const pagesDir = path.join(process.cwd(), "pages");
-  const pagePath = path.join(pagesDir, `${pageName}.tsx`);
+  const pagesDir = path.join(process.cwd(), `src/app/${pageName}`);
+  const pagePath = path.join(pagesDir, `page.tsx`);
 
   if (!fs.existsSync(pagesDir)) {
     console.error(
@@ -20,15 +20,29 @@ const createPage = (pageName) => {
     process.exit(1);
   }
 
-  const pageContent = `import React from "react";
+  const pageContent = `"use client";
+  import Main from "@/app/_components/main";
+  import Title from "@/app/_components/title";
+  import { ${
+    pageName.charAt(0).toUpperCase() + pageName.slice(1)
+  }Provider } from "@/context/${pageName}Context";
+  import React from "react";
+  import Table${
+    pageName.charAt(0).toUpperCase() + pageName.slice(1)
+  } from "./table";
+  import { CreateModal } from "./create";
 
 export default function ${
     pageName.charAt(0).toUpperCase() + pageName.slice(1)
   }() {
   return (
-    <div>
-      <h1>${pageName.charAt(0).toUpperCase() + pageName.slice(1)} Page</h1>
-    </div>
+    <${pageName.charAt(0).toUpperCase() + pageName.slice(1)}Provider>
+    <Main className="flex flex-col gap-3">
+      <Title>${pageName.charAt(0).toUpperCase() + pageName.slice(1)}</Title>
+      <CreateModal />
+      <Table${pageName.charAt(0).toUpperCase() + pageName.slice(1)} />
+    </Main>
+  </${pageName.charAt(0).toUpperCase() + pageName.slice(1)}Provider>
   );
 }`;
 
